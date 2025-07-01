@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caça-Palavras</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        #grid {
+            background-color: black;
+            height: 90vh;
+            width: 90vh;
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            display: grid;
+            padding: 2px;
+        }
+
+        @media only screen and (max-width: 700px) {
+            #grid {
+                height: 90vw;
+                width: 90vw;
+            }
+        }
+
+        .letra {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: xx-large;
+        }
+    </style>
+</head>
+<body>
+    <div id="grid"></div>
+    
+    <script>
+
+        const dados = [
+            ["A", "D", "L", "O", "S", "M", "P", "N", "S", "N", "É"],
+            ["O", "I", "R", "M", "U", "P", "M", "G", "E", "D", "Á"],
+            ["D", "L", "C", "A", "Á", "T", "G", "I", "P", "E", "A"],
+            ["A", "O", "L", "N", "B", "G", "E", "R", "A", "N", "G"],
+            ["Ç", "D", "A", "E", "Ê", "M", "O", "L", "R", "E", "O"],
+            ["R", "A", "Ç", "G", "C", "L", "Â", "A", "A", "G", "G"],
+            ["O", "O", "A", "Í", "A", "D", "U", "N", "D", "R", "A"],
+            ["F", "D", "M", "D", "N", "B", "F", "B", "O", "I", "N"],
+            ["F", "R", "A", "N", "T", "O", "S", "Í", "R", "R", "I"],
+            ["F", "E", "L", "I", "O", "N", "O", "A", "E", "U", "S"],
+            ["L", "P", "Ê", "V", "R", "É", "V", "Ç", "S", "P", "T"]
+        ];
+
+        function carregarGrid() {
+            const grid = document.getElementById('grid');
+            grid.style.gridTemplateColumns = `repeat(${dados.length}, 1fr)`;
+            grid.style.gridTemplateRows = `repeat(${dados.length}, 1fr)`;
+
+            for (let i = 0; i < dados.length; i++) {
+                for (let j = 0; j < dados.length; j++) {
+
+                    const letra = document.createElement('div');
+                    letra.classList.add('letra');
+                    letra.innerHTML = `<p>${dados[i][j]}</p>`;
+                    grid.appendChild(letra);
+
+                }
+            }
+        }
+
+        carregarGrid();
+
+    </script>
+</body>
+</html>
