@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,14 +29,6 @@
             transform: translate(-50%, -50%);
 
             display: grid;
-            padding: 2px;
-        }
-
-        @media only screen and (max-width: 700px) {
-            #grid {
-                height: 90vw;
-                width: 90vw;
-            }
         }
 
         .letra {
@@ -44,7 +36,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: xx-large;
+            font-size: calc((90vh / 11) * 0.6);
+            font-family: Arial, Helvetica, sans-serif;
+            user-select: none;
+        }
+
+        @media only screen and (max-width: 700px) {
+            #grid {
+                height: 90vw;
+                width: 90vw;
+            }
+
+            .letra {
+                font-size: calc((90vw / 11) * 0.6);
+            }
         }
     </style>
 </head>
@@ -67,6 +72,9 @@
             ["L", "P", "Ê", "V", "R", "É", "V", "Ç", "S", "P", "T"]
         ];
 
+        const palavras = ["INDÍGENA", "DENEGRIR", "TURBULÊNCIA", "SEPARADORES", "VARIA", "TELA",
+        "FORÇADO", "LAMAÇAL", "PERDOADO", "ÂMBAR", "MÁGOA", "SINAGOGA", "BONÉ", "CANTOR", "SOLDA"];
+
         function carregarGrid() {
             const grid = document.getElementById('grid');
             grid.style.gridTemplateColumns = `repeat(${dados.length}, 1fr)`;
@@ -78,6 +86,9 @@
                     const letra = document.createElement('div');
                     letra.classList.add('letra');
                     letra.innerHTML = `<p>${dados[i][j]}</p>`;
+
+                    letra.addEventListener('click', () => selecionar(i, j));
+
                     grid.appendChild(letra);
 
                 }
@@ -85,6 +96,66 @@
         }
 
         carregarGrid();
+
+        const selecao = [];
+        const posicoes = [];
+        let direcao = null;
+
+        function selecionar(row, column) {
+
+            if (direcao) {
+                const ultimaPosicao = posicoes[posicoes.length - 1];
+                const proximaLinha = ultimaPosicao.row + direcao.row;
+                const proximaColuna = ultimaPosicao.column + direcao.column;
+
+                if (row !== proximaLinha || column !== proximaColuna) {
+                    console.log('movimento invalido');
+                    limparSelecao();
+                    return;
+                }
+            }
+
+            selecao.push(dados[row][column]);
+            posicoes.push({ row, column });
+
+            if (selecao.length === 2) {
+                const r1 = posicoes[0].row;
+                const c1 = posicoes[0].column;
+                const r2 = posicoes[1].row;
+                const c2 = posicoes[1].column;
+
+                direcao = {
+                    row: r2 - r1,
+                    column: c2 - c1
+                };
+
+                if (direcao.row === 0 && direcao.column === 0) {
+                    console.log('❌ Clique inválido. Reiniciando.');
+                    limparSelecao();
+                    return;
+                }
+            }
+
+            const palavraFormada = selecao.join('');
+            const palavraInvertida = selecao.slice().reverse().join('');
+
+            console.log('Palavra parcial:', palavraFormada);
+
+            for (const palavra of palavras) {
+                if (palavraFormada === palavra || palavraInvertida === palavra) {
+                    console.log(`✅ Acertou: ${palavra}`);
+                    limparSelecao();
+                    return;
+                }
+            }
+        }
+
+        function limparSelecao() {
+            selecao.length = 0;
+            posicoes.length = 0;
+            direcao = null;
+        }
+
 
     </script>
 </body>
